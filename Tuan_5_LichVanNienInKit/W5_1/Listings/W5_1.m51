@@ -1,0 +1,415 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    11/19/2024  01:42:19  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\main.obj TO .\Objects\W5_1 PRINT (.\Listings\W5_1.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\main.obj (MAIN)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?IMUL)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?UIDIV)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?ILDOPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?IILDPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?IILDOPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?ISTOPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?IILDX)
+
+
+LINK MAP OF MODULE:  .\Objects\W5_1 (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0030H     UNIT         ?DT?MAIN
+            DATA    0038H     0015H     UNIT         _DATA_GROUP_
+            DATA    004DH     0002H     UNIT         ?DT?_DIGIT_SELECT_DISP?MAIN
+            IDATA   004FH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0003H     ABSOLUTE     
+                    0006H     07FAH                  *** GAP ***
+            CODE    0800H     01CBH     UNIT         ?PR?_DIGIT_SELECT_DISP?MAIN
+            CODE    09CBH     01ABH     UNIT         ?PR?CALENDAR_DISP?MAIN
+            CODE    0B76H     0167H     UNIT         ?C?LIB_CODE
+            CODE    0CDDH     008CH     UNIT         ?C_C51STARTUP
+            CODE    0D69H     0071H     UNIT         ?PR?_LED7SEG_DISP?MAIN
+            CODE    0DDAH     003EH     UNIT         ?PR?_DELAY?MAIN
+            CODE    0E18H     0036H     UNIT         ?PR?_INCREASE_MONTH?MAIN
+            CODE    0E4EH     0036H     UNIT         ?PR?_INCREASE_DAY?MAIN
+            CODE    0E84H     0035H     UNIT         ?PR?_INCREASE_HOUR?MAIN
+            CODE    0EB9H     0035H     UNIT         ?PR?_INCREASE_MINUTE?MAIN
+            CODE    0EEEH     0035H     UNIT         ?PR?_INCREASE_SECCOND?MAIN
+            CODE    0F23H     002FH     UNIT         ?C_INITSEG
+            CODE    0F52H     002BH     UNIT         ?PR?CALENDAR_INITIAL?MAIN
+            CODE    0F7DH     0027H     UNIT         ?PR?INTERRUPT_ACTION?MAIN
+            CODE    0FA4H     0013H     UNIT         ?PR?TRIGGER_CHECK?MAIN
+            CODE    0FB7H     000EH     UNIT         ?PR?_DIGIT_DISP?MAIN
+            CODE    0FC5H     0008H     UNIT         ?PR?MAIN?MAIN
+            CODE    0FCDH     0007H     UNIT         ?PR?_INCREASE_YEAR?MAIN
+            CODE    0FD4H     0003H     UNIT         ?PR?MAIN_INITIAL?MAIN
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  11/19/2024  01:42:19  PAGE 2
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\W5_1 (MAIN)
+
+
+SEGMENT                               DATA_GROUP 
+  +--> CALLED SEGMENT               START    LENGTH
+---------------------------------------------------
+?C_C51STARTUP                       -----    -----
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN                       -----    -----
+  +--> ?PR?MAIN_INITIAL?MAIN
+  +--> ?PR?CALENDAR_DISP?MAIN
+
+?PR?MAIN_INITIAL?MAIN               -----    -----
+  +--> ?PR?CALENDAR_INITIAL?MAIN
+
+?PR?CALENDAR_DISP?MAIN              0038H    0006H
+  +--> ?PR?_INCREASE_SECCOND?MAIN
+  +--> ?PR?_DELAY?MAIN
+  +--> ?PR?_LED7SEG_DISP?MAIN
+
+?PR?_INCREASE_SECCOND?MAIN          003EH    0003H
+  +--> ?PR?_INCREASE_MINUTE?MAIN
+
+?PR?_INCREASE_MINUTE?MAIN           0041H    0003H
+  +--> ?PR?_INCREASE_HOUR?MAIN
+
+?PR?_INCREASE_HOUR?MAIN             0044H    0003H
+  +--> ?PR?_INCREASE_DAY?MAIN
+
+?PR?_INCREASE_DAY?MAIN              0047H    0003H
+  +--> ?PR?_INCREASE_MONTH?MAIN
+
+?PR?_INCREASE_MONTH?MAIN            004AH    0003H
+  +--> ?PR?_INCREASE_YEAR?MAIN
+
+?PR?_DELAY?MAIN                     -----    -----
+  +--> ?PR?_DIGIT_DISP?MAIN
+
+?PR?_DIGIT_DISP?MAIN                -----    -----
+  +--> ?PR?_LED7SEG_DISP?MAIN
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\W5_1 (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  B:00A8H.7       PUBLIC        EA
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  11/19/2024  01:42:19  PAGE 3
+
+
+  B:00A0H.2       PUBLIC        GND0
+  B:00A0H.3       PUBLIC        GND1
+  C:0800H         PUBLIC        _digit_select_disp
+  B:00A0H.4       PUBLIC        GND2
+  C:0F52H         PUBLIC        calendar_initial
+  C:0DF3H         SYMBOL        _delay
+  C:0EEEH         PUBLIC        _increase_seccond
+  C:0F7DH         SYMBOL        Interrupt_Action
+  D:0008H         PUBLIC        MODE
+  C:0FC5H         PUBLIC        main
+  C:0FB7H         PUBLIC        _digit_disp
+  C:0D69H         PUBLIC        _led7seg_disp
+  D:000AH         PUBLIC        DISP_TIME
+  C:0EB9H         PUBLIC        _increase_minute
+  B:00B0H.2       PUBLIC        TRIGGER0
+  B:00A8H.0       PUBLIC        EX0
+  B:0088H.0       PUBLIC        IT0
+  C:09CBH         PUBLIC        calendar_disp
+  D:000CH         PUBLIC        datetime
+  C:0E18H         PUBLIC        _increase_month
+  C:0FA4H         PUBLIC        trigger_check
+  D:0018H         PUBLIC        F_EXIT
+  C:0FCDH         PUBLIC        _increase_year
+  C:0E4EH         PUBLIC        _increase_day
+  D:001AH         PUBLIC        DIGIT_CODE
+  C:0E84H         PUBLIC        _increase_hour
+  C:0FD4H         PUBLIC        main_initial
+  D:0036H         PUBLIC        EDIT_POS
+  -------         PROC          _LED7SEG_DISP
+  D:0006H         SYMBOL        POS
+  D:0004H         SYMBOL        CODE
+  C:0D69H         LINE#         25
+  C:0D69H         LINE#         26
+  C:0D77H         LINE#         27
+  C:0D85H         LINE#         28
+  C:0D93H         LINE#         29
+  C:0DA1H         LINE#         30
+  C:0DAFH         LINE#         31
+  C:0DBDH         LINE#         32
+  C:0DCBH         LINE#         33
+  C:0DD9H         LINE#         34
+  -------         ENDPROC       _LED7SEG_DISP
+  -------         PROC          _DIGIT_DISP
+  D:0006H         SYMBOL        POS
+  D:0004H         SYMBOL        DIGIT
+  C:0FB7H         LINE#         36
+  C:0FB7H         LINE#         37
+  -------         ENDPROC       _DIGIT_DISP
+  -------         PROC          _DIGIT_SELECT_DISP
+  D:0006H         SYMBOL        LED_POS
+  D:004DH         SYMBOL        SEL_POS
+  D:0002H         SYMBOL        DIGIT
+  C:0800H         LINE#         40
+  C:0804H         LINE#         41
+  C:083DH         LINE#         42
+  C:0876H         LINE#         43
+  C:08AFH         LINE#         44
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  11/19/2024  01:42:19  PAGE 4
+
+
+  C:08E8H         LINE#         45
+  C:0921H         LINE#         46
+  C:095AH         LINE#         47
+  C:0993H         LINE#         48
+  C:09CAH         LINE#         49
+  -------         ENDPROC       _DIGIT_SELECT_DISP
+  -------         PROC          _INCREASE_YEAR
+  D:0001H         SYMBOL        datetime
+  C:0FCDH         LINE#         14
+  C:0FCDH         LINE#         15
+  -------         ENDPROC       _INCREASE_YEAR
+  -------         PROC          _INCREASE_MONTH
+  D:004AH         SYMBOL        datetime
+  C:0E18H         LINE#         17
+  C:0E1EH         LINE#         18
+  C:0E2AH         LINE#         19
+  C:0E2DH         LINE#         20
+  C:0E3DH         LINE#         21
+  C:0E3DH         LINE#         22
+  C:0E4DH         LINE#         23
+  C:0E4DH         LINE#         24
+  -------         ENDPROC       _INCREASE_MONTH
+  -------         PROC          _INCREASE_DAY
+  D:0047H         SYMBOL        datetime
+  C:0E4EH         LINE#         25
+  C:0E54H         LINE#         26
+  C:0E60H         LINE#         27
+  C:0E63H         LINE#         28
+  C:0E73H         LINE#         29
+  C:0E73H         LINE#         30
+  C:0E83H         LINE#         31
+  C:0E83H         LINE#         32
+  -------         ENDPROC       _INCREASE_DAY
+  -------         PROC          _INCREASE_HOUR
+  D:0044H         SYMBOL        datetime
+  C:0E84H         LINE#         33
+  C:0E8AH         LINE#         34
+  C:0E96H         LINE#         35
+  C:0E99H         LINE#         36
+  C:0EA8H         LINE#         37
+  C:0EA8H         LINE#         38
+  C:0EB8H         LINE#         39
+  C:0EB8H         LINE#         40
+  -------         ENDPROC       _INCREASE_HOUR
+  -------         PROC          _INCREASE_MINUTE
+  D:0041H         SYMBOL        datetime
+  C:0EB9H         LINE#         41
+  C:0EBFH         LINE#         42
+  C:0ECBH         LINE#         43
+  C:0ECEH         LINE#         44
+  C:0EDDH         LINE#         45
+  C:0EDDH         LINE#         46
+  C:0EEDH         LINE#         47
+  C:0EEDH         LINE#         48
+  -------         ENDPROC       _INCREASE_MINUTE
+  -------         PROC          _INCREASE_SECCOND
+  D:003EH         SYMBOL        datetime
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  11/19/2024  01:42:19  PAGE 5
+
+
+  C:0EEEH         LINE#         49
+  C:0EF4H         LINE#         50
+  C:0F00H         LINE#         51
+  C:0F03H         LINE#         52
+  C:0F12H         LINE#         53
+  C:0F12H         LINE#         54
+  C:0F22H         LINE#         55
+  C:0F22H         LINE#         56
+  -------         ENDPROC       _INCREASE_SECCOND
+  C:0DEAH         SYMBOL        L?0107
+  C:0DEFH         SYMBOL        L?0108
+  -------         PROC          L?0106
+  -------         ENDPROC       L?0106
+  C:0DEAH         SYMBOL        L?0107
+  C:0DEFH         SYMBOL        L?0108
+  -------         PROC          _DELAY
+  D:0002H         SYMBOL        mili_sec
+  -------         DO            
+  D:0082H         SYMBOL        i
+  -------         ENDDO         
+  C:0DF3H         LINE#         21
+  C:0DF7H         LINE#         23
+  C:0E0EH         LINE#         24
+  C:0E17H         LINE#         25
+  -------         ENDPROC       _DELAY
+  -------         PROC          TRIGGER_CHECK
+  C:0FA4H         LINE#         27
+  C:0FA4H         LINE#         28
+  C:0FA7H         LINE#         29
+  C:0FB6H         LINE#         30
+  C:0FB6H         LINE#         31
+  -------         ENDPROC       TRIGGER_CHECK
+  -------         PROC          CALENDAR_DISP
+  -------         DO            
+  D:0038H         SYMBOL        DATE_TIME_DISP
+  D:003AH         SYMBOL        MAX_LOOP_DISP
+  C:0A20H         SYMBOL        EXIT
+  -------         DO            
+  D:003CH         SYMBOL        i
+  D:003CH         SYMBOL        i
+  -------         ENDDO         
+  -------         DO            
+  D:003CH         SYMBOL        i
+  -------         ENDDO         
+  -------         ENDDO         
+  C:09CBH         LINE#         33
+  C:09CBH         LINE#         34
+  C:09D1H         LINE#         35
+  C:09D7H         LINE#         37
+  C:09E0H         LINE#         40
+  C:09E9H         LINE#         41
+  C:09EDH         LINE#         42
+  C:0A00H         LINE#         43
+  C:0A14H         LINE#         44
+  C:0A17H         LINE#         45
+  C:0A24H         LINE#         46
+  C:0A27H         LINE#         48
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  11/19/2024  01:42:19  PAGE 6
+
+
+  C:0A2BH         LINE#         49
+  C:0A2EH         LINE#         50
+  C:0A3BH         LINE#         51
+  C:0A3EH         LINE#         53
+  C:0A52H         LINE#         54
+  C:0A55H         LINE#         55
+  C:0A69H         LINE#         56
+  C:0A6CH         LINE#         57
+  C:0A80H         LINE#         58
+  C:0A83H         LINE#         59
+  C:0A90H         LINE#         60
+  C:0A93H         LINE#         61
+  C:0A9EH         LINE#         62
+  C:0A9EH         LINE#         63
+  C:0AA9H         LINE#         64
+  C:0AADH         LINE#         65
+  C:0AC0H         LINE#         66
+  C:0AE1H         LINE#         67
+  C:0AE4H         LINE#         68
+  C:0AFEH         LINE#         69
+  C:0B01H         LINE#         70
+  C:0B05H         LINE#         71
+  C:0B08H         LINE#         72
+  C:0B15H         LINE#         73
+  C:0B18H         LINE#         75
+  C:0B2CH         LINE#         76
+  C:0B2FH         LINE#         77
+  C:0B3CH         LINE#         78
+  C:0B3FH         LINE#         79
+  C:0B4AH         LINE#         80
+  C:0B4DH         LINE#         81
+  C:0B67H         LINE#         82
+  C:0B6AH         LINE#         83
+  C:0B75H         LINE#         84
+  C:0B75H         LINE#         85
+  C:0B75H         LINE#         87
+  -------         ENDPROC       CALENDAR_DISP
+  -------         PROC          INTERRUPT_ACTION
+  C:0F7DH         LINE#         90
+  C:0F88H         LINE#         91
+  C:0F9BH         LINE#         92
+  -------         ENDPROC       INTERRUPT_ACTION
+  -------         PROC          CALENDAR_INITIAL
+  C:0F52H         LINE#         94
+  C:0F52H         LINE#         95
+  C:0F54H         LINE#         96
+  C:0F56H         LINE#         97
+  C:0F58H         LINE#         98
+  C:0F5EH         LINE#         99
+  C:0F64H         LINE#         100
+  C:0F6AH         LINE#         101
+  C:0F70H         LINE#         102
+  C:0F76H         LINE#         103
+  C:0F7CH         LINE#         104
+  -------         ENDPROC       CALENDAR_INITIAL
+  -------         PROC          MAIN_INITIAL
+  C:0FD4H         LINE#         4
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  11/19/2024  01:42:19  PAGE 7
+
+
+  C:0FD4H         LINE#         5
+  -------         ENDPROC       MAIN_INITIAL
+  -------         PROC          MAIN
+  C:0FC5H         LINE#         4
+  C:0FC5H         LINE#         5
+  C:0FC8H         LINE#         6
+  C:0FC8H         LINE#         7
+  C:0FCBH         LINE#         8
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        ?C?IMUL
+  C:0B76H         PUBLIC        ?C?IMUL
+  -------         ENDMOD        ?C?IMUL
+
+  -------         MODULE        ?C?UIDIV
+  C:0B88H         PUBLIC        ?C?UIDIV
+  -------         ENDMOD        ?C?UIDIV
+
+  -------         MODULE        ?C?ILDOPTR
+  C:0BDDH         PUBLIC        ?C?ILDOPTR
+  -------         ENDMOD        ?C?ILDOPTR
+
+  -------         MODULE        ?C?IILDPTR
+  C:0C15H         PUBLIC        ?C?IILDPTR
+  -------         ENDMOD        ?C?IILDPTR
+
+  -------         MODULE        ?C?IILDOPTR
+  C:0C4DH         PUBLIC        ?C?IILDOPTR
+  -------         ENDMOD        ?C?IILDOPTR
+
+  -------         MODULE        ?C?ISTOPTR
+  C:0C9AH         PUBLIC        ?C?ISTOPTR
+  -------         ENDMOD        ?C?ISTOPTR
+
+  -------         MODULE        ?C?IILDX
+  C:0CC7H         PUBLIC        ?C?IILDX
+  -------         ENDMOD        ?C?IILDX
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DIGIT_SELECT_DISP?MAIN
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?TRIGGER_CHECK?MAIN
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 05E6H BYTE (73%) *
+******************************************************************************
+
+Program Size: data=80.0 xdata=0 code=2013
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)

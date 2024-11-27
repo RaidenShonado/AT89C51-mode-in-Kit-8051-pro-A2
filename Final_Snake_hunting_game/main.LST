@@ -1,0 +1,53 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              11/25/2024 23:38:22 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include <matrix.h>
+   2          #include <INTRINS.h>
+   3          #include <REG51.h>
+   4          #include <Snake.h>
+*** WARNING C206 IN LINE 49 OF Snake.h: 'rand': missing function-prototype
+   5          
+   6          #define COMMONPORTS P0
+   7          
+   8          void main()
+   9          {
+  10   1        unsigned char tab;
+  11   1        unsigned char i;
+  12   1      
+  13   1        init_game();
+  14   1      
+  15   1        while(1)
+  16   1        {
+  17   2          Running_Game();
+  18   2          // Refresh screen
+  19   2          for(i = 0; i < Speed; i++) // The game speed is still kept the same
+  20   2          {
+  21   3            for(tab = 0; tab < 8; tab++)
+  22   3            {
+  23   4              Hc595SendByte(0x00);  // Clear old data
+  24   4              COMMONPORTS = Cols[tab];
+  25   4              Hc595SendByte(display_buffer[tab]); // Update the screen
+  26   4            }
+  27   3          }
+  28   2        }
+  29   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    633    ----
+   CONSTANT SIZE    =      8    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     78       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

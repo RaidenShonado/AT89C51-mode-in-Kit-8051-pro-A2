@@ -1,0 +1,126 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              11/19/2024 02:55:47 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include "IR_Reading.h" // Thu vi?n d?c IR
+   2          #include "reg51.h"     // Thu vi?n d?nh nghia vi di?u khi?n 8051
+   3          #include "XPT2046.h"   // Thu vi?n cho XPT2046 (n?u c?n)
+   4          
+   5          sbit K1 = P3^1; // Nút K1
+   6          sbit K2 = P3^0; // Nút K2
+   7          sbit K3 = P3^2; // Nút K3
+   8          sbit LED3 = P2^2; // Ðèn LED 3
+   9          sbit LED2 = P2^1; // Ðèn LED 2
+  10          sbit LED7 = P2^6;
+  11          sbit LED8 = P2^7;
+  12          
+  13          
+  14          unsigned char code smgduan[16] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07,
+  15                                             0x7f, 0x6f, 0x77, 0x7c, 0x39, 0x5e, 0x79, 0x71}; // Mã hi?n th? cho 0-F
+  16          unsigned char countdown = 15; // Th?i gian d?m ngu?c b?t d?u t? 15s (F)
+  17          unsigned char timer_running = 0; // Bi?n ki?m tra tr?ng thái h?n gi?
+  18          unsigned int temp; // Bi?n t?m d? luu giá tr? d?c t? c?m bi?n
+  19          
+  20          void Timer1Init() {
+  21   1          TMOD |= 0X10; // Ch? d? 1 cho Timer1
+  22   1          TH1 = 0xFC;   // Giá tr? kh?i t?o
+  23   1          TL1 = 0x18;   
+  24   1          ET1 = 1;      // Cho phép ng?t Timer1
+  25   1          EA = 1;       // Cho phép ng?t toàn c?c
+  26   1          TR1 = 1;      // Kh?i d?ng Timer1
+  27   1      }
+  28          
+  29          void display(unsigned char value) {
+  30   1          if (value > 15) value = 15; // Ð?m b?o không vu?t quá 15
+  31   1          P0 = smgduan[value]; // Hi?n th? giá tr? countdown
+  32   1      }
+  33          
+  34          void main() {
+  35   1          unsigned char count = 0; // Bi?n d?m d? di?u khi?n th?i gian d?c
+  36   1          Initial(); // Kh?i t?o c?m bi?n
+  37   1          LED2 = 1; // T?t LED2 ban d?u
+  38   1          LED7 = 1;
+  39   1          LED8 = 1;
+  40   1          Timer1Init(); // Kh?i d?ng Timer1
+  41   1          display(countdown); // Hi?n th? giá tr? ban d?u
+  42   1      
+  43   1          while (1) {
+  44   2              Button_Matrix_Check(); // Ki?m tra tr?ng thái bàn phím
+  45   2      
+  46   2              // Ki?m tra tr?ng thái nút K1
+  47   2              if (K1 == 0) { // Nút K1 du?c nh?n
+  48   3                  while (K1 == 0); // Ð?i nút nh? ra
+  49   3                  timer_running = !timer_running; // Ð?o tr?ng thái c?a timer_running
+  50   3              }
+  51   2      
+  52   2              // Ki?m tra tr?ng thái nút K2
+  53   2              if (K2 == 0) { // Nút K2 du?c nh?n
+  54   3                  while (K2 == 0); // Ð?i nút nh? ra
+  55   3                  if (countdown < 15) {
+C51 COMPILER V9.60.7.0   MAIN                                                              11/19/2024 02:55:47 PAGE 2   
+
+  56   4                      countdown++; // Tang th?i gian
+  57   4                      display(countdown); // C?p nh?t hi?n th?
+  58   4                  }
+  59   3              }
+  60   2      
+  61   2              // Ki?m tra tr?ng thái nút K3
+  62   2              if (K3 == 0) { // Nút K3 du?c nh?n
+  63   3                  while (K3 == 0); // Ð?i nút nh? ra
+  64   3                  if (countdown > 0) {
+  65   4                      countdown--; // Gi?m th?i gian
+  66   4                      display(countdown); // C?p nh?t hi?n th?
+  67   4                  }
+  68   3              }
+  69   2      
+  70   2              if (count == 50) { // Ð?c d? li?u m?i 50 l?n l?p
+  71   3                  count = 0;
+  72   3                  temp = Read_AD_Data(0xA4); // Ð?c d? li?u t? c?m bi?n
+  73   3              }
+  74   2              count++;
+  75   2      
+  76   2              // Ði?u khi?n LED2 d?a trên giá tr? d?c t? c?m bi?n
+  77   2              if (temp < 100) {
+  78   3                  LED2 = 0; // B?t LED2 n?u giá tr? d?c du?i 100
+  79   3              } else if (temp > 100) {
+  80   3                  LED2 = 1; // T?t LED2 n?u giá tr? d?c trên 100
+  81   3              }
+  82   2          }
+  83   1      }
+  84          
+  85          void Timer1() interrupt 3 {
+  86   1          static unsigned int i;
+  87   1          TH1 = 0xFC; // Thi?t l?p l?i giá tr? cho Timer1
+  88   1          TL1 = 0x18;
+  89   1          i++;
+  90   1          if (i == 1000) { // Sau 1 giây
+  91   2              i = 0;
+  92   2              if (timer_running && countdown > 0) {
+  93   3                  countdown--; // Gi?m th?i gian h?n gi?
+  94   3                  display(countdown); // C?p nh?t giá tr? hi?n th?
+  95   3                  if (countdown == 0) {
+  96   4                      LED3 = ~LED3; // Ð?o tr?ng thái c?a LED3 khi h?t th?i gianac
+  97   4                      timer_running = 0; // D?ng h?n gi?
+  98   4                  }
+  99   3              }
+ 100   2          }
+ 101   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    563    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     12       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

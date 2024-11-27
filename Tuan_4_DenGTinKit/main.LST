@@ -1,0 +1,233 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              11/19/2024 01:41:18 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OMF2 OPTIMIZE(8,SPEED) BROWSE DEBUG TABS(2)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          
+   3          typedef unsigned int u16;
+   4          typedef unsigned char u8;
+   5          
+   6          // Pin definitions for the 7-segment display
+   7          sbit LSA = P2^2;
+   8          sbit LSB = P2^3;
+   9          sbit LSC = P2^4;
+  10          
+  11          // Pin definitions for the 74HC595
+  12          sbit P41 = P3^4;  // SER of 74HC595
+  13          sbit P42 = P3^5;  // RCLK of 74HC595
+  14          sbit P43 = P3^6;  // SCLK of 74HC595
+  15          
+  16          // Pin definitions for buttons
+  17          sbit button_1 = P3^1; // Mode toggle button
+  18          sbit button_2 = P3^0; // Pattern toggle button
+  19          
+  20          // 7-segment display code for digits 0-9 and letters A-F
+  21          u8 code smgduan[16] = {
+  22              0x3f, 0x06, 0x5b, 0x4f, 0x66, 
+  23              0x6d, 0x7d, 0x07, 0x7f, 0x6f, 
+  24              0x77, 0x7c, 0x39, 0x5e, 0x79, 
+  25              0x71
+  26          };
+  27          
+  28          u8 DisplayData[8];
+  29          u16 count = 0;
+  30          u8 time_led = 21;
+  31          bit led_on = 1; // Flag to indicate if LED matrix should be on
+  32          bit control_mode = 0; // 0 = Automatic, 1 = Manual
+  33          u8 matrix_state = 0x81; // Initial matrix state
+  34          bit button_2_last_state = 1; // Last state of button_2
+  35          
+  36          // Function to create a delay
+  37          void delay(u16 i) {
+  38   1          while (i--);
+  39   1      }
+  40          
+  41          // Timer 0 initialization
+  42          void Timer0Init() {
+  43   1          TMOD |= 0x01; // Set Timer 0 mode 1
+  44   1          TH0 = 0xFC;   // Load timer value for 1ms delay
+  45   1          TL0 = 0x18;
+  46   1          ET0 = 1;      // Enable Timer 0 interrupt
+  47   1          EA = 1;       // Enable global interrupts
+  48   1          TR0 = 1;      // Start Timer 0
+  49   1      }
+  50          
+  51          // Function to send a byte to the 74HC595
+  52          void sendByteTo74HC595(u8 j) {
+  53   1          u8 i;
+  54   1          for (i = 0; i < 8; i++) {
+  55   2              P41 = (j & (0x80 >> i)) ? 1 : 0;
+C51 COMPILER V9.60.7.0   MAIN                                                              11/19/2024 01:41:18 PAGE 2   
+
+  56   2              P43 = 1;
+  57   2              P43 = 0;
+  58   2          }
+  59   1          P42 = 1;
+  60   1          P42 = 0;
+  61   1      }
+  62          
+  63          // Function to display segments
+  64          void DigDisplay() {
+  65   1          u8 i;
+  66   1          for (i = 0; i < 8; i++) {
+  67   2              switch (i) {
+  68   3                  case 0: LSA = 1; LSB = 1; LSC = 1; break; // 7th digit
+  69   3                  case 1: LSA = 0; LSB = 1; LSC = 1; break; // 6th digit
+  70   3                  case 2: LSA = 1; LSB = 0; LSC = 1; break; // 5th digit
+  71   3                  case 3: LSA = 0; LSB = 0; LSC = 1; break; // 4th digit
+  72   3                  case 4: LSA = 1; LSB = 1; LSC = 0; break; // 3rd digit
+  73   3                  case 5: LSA = 0; LSB = 1; LSC = 0; break; // 2nd digit
+  74   3                  case 6: LSA = 1; LSB = 0; LSC = 0; break; // 1st digit
+  75   3                  case 7: LSA = 0; LSB = 0; LSC = 0; break; // 0th digit
+  76   3              }
+  77   2              P0 = DisplayData[i];
+  78   2              delay(100);
+  79   2              P0 = 0x00; // Clear the display after each digit
+  80   2          }
+  81   1      }
+  82          
+  83          // Function to update the matrix display
+  84          void updateMatrix() {
+  85   1          P42 = 0;
+  86   1          P41 = 0;
+  87   1          P43 = 0;
+  88   1      
+  89   1          if (control_mode) {
+  90   2              // Manual mode: display the matrix state selected by button_2
+  91   2              sendByteTo74HC595(matrix_state);
+  92   2          } else {
+  93   2              // Automatic mode: change pattern based on `time_led`
+  94   2              if (time_led > 13) {
+  95   3                  sendByteTo74HC595(0x81);
+  96   3              } else if (time_led > 10) {
+  97   3                  sendByteTo74HC595(0x41);
+  98   3              } else if (time_led >= 3) {
+  99   3                  sendByteTo74HC595(0x24);
+ 100   3              } else {
+ 101   3                  sendByteTo74HC595(0x22);
+ 102   3              }
+ 103   2          }
+ 104   1          P42 = 1;
+ 105   1      }
+ 106          
+ 107          // Function to process time and update DisplayData
+ 108          void datapros() {
+ 109   1          u8 chuc_1, dv_1, chuc_2, dv_2;
+ 110   1      
+ 111   1          if (time_led > 13) {
+ 112   2              chuc_1 = (time_led - 11) / 10;
+ 113   2              dv_1 = (time_led - 11) % 10;
+ 114   2              chuc_2 = (time_led - 14) / 10;
+ 115   2              dv_2 = (time_led - 14) % 10;
+ 116   2          } else if (time_led > 10) {
+ 117   2              chuc_1 = (time_led - 11) / 10;
+C51 COMPILER V9.60.7.0   MAIN                                                              11/19/2024 01:41:18 PAGE 3   
+
+ 118   2              dv_1 = (time_led - 11) % 10;
+ 119   2              chuc_2 = chuc_1;
+ 120   2              dv_2 = dv_1;
+ 121   2          } else if (time_led >= 3) {
+ 122   2              chuc_1 = (time_led - 3) / 10;
+ 123   2              dv_1 = (time_led - 3) % 10;
+ 124   2              chuc_2 = time_led / 10;
+ 125   2              dv_2 = time_led % 10;
+ 126   2          } else {
+ 127   2              chuc_1 = 0;
+ 128   2              dv_1 = time_led;
+ 129   2              chuc_2 = 0;
+ 130   2              dv_2 = time_led;
+ 131   2          }
+ 132   1      
+ 133   1          DisplayData[2] = smgduan[chuc_1];
+ 134   1          DisplayData[3] = smgduan[dv_1];
+ 135   1          DisplayData[1] = 0x00; // Clear unused segments
+ 136   1          DisplayData[0] = 0x00; // Clear unused segments
+ 137   1          DisplayData[6] = smgduan[chuc_2];
+ 138   1          DisplayData[7] = smgduan[dv_2];
+ 139   1          DisplayData[4] = 0x00; // Clear unused segments
+ 140   1          DisplayData[5] = 0x00; // Clear unused segments
+ 141   1      }
+ 142          
+ 143          // Main function
+ 144          void main() {
+ 145   1          Timer0Init();
+ 146   1      
+ 147   1          while (1) {
+ 148   2              // Toggle between automatic and manual mode with button_1
+ 149   2              if (!button_1) {
+ 150   3                  delay(10000); // Debounce delay
+ 151   3                  if (!button_1) {
+ 152   4                      control_mode = !control_mode; // Toggle control mode
+ 153   4                      if (control_mode) {
+ 154   5                          // When switching to manual mode, turn off 7-segment display
+ 155   5                          u8 i; // Declare the loop variable here
+ 156   5                          for (i = 0; i < 8; i++) {
+ 157   6                              DisplayData[i] = 0x00; // Turn off all segments
+ 158   6                          }
+ 159   5                      }
+ 160   4                  }
+ 161   3              }
+ 162   2      
+ 163   2              // Check button_2 for toggling matrix state in manual mode
+ 164   2              if (control_mode) {
+ 165   3                  bit button_2_current_state = !button_2; // Current state of button_2
+ 166   3                  if (button_2_current_state && !button_2_last_state) { // Button pressed
+ 167   4                      matrix_state = (matrix_state == 0x81) ? 0x24 : 0x81; // Swap matrix state
+ 168   4                  }
+ 169   3                  button_2_last_state = button_2_current_state; // Store last state
+ 170   3              }
+ 171   2      
+ 172   2              // In automatic mode, update both displays
+ 173   2              if (!control_mode) {
+ 174   3                  datapros();
+ 175   3              }
+ 176   2      
+ 177   2              DigDisplay();
+ 178   2              updateMatrix();
+ 179   2          }
+C51 COMPILER V9.60.7.0   MAIN                                                              11/19/2024 01:41:18 PAGE 4   
+
+ 180   1      }
+ 181          
+ 182          // Timer 0 interrupt service routine
+ 183          void Timer0(void) interrupt 1 {
+ 184   1          if (!control_mode) { // Only update in automatic mode
+ 185   2              TH0 = 0xFC;
+ 186   2              TL0 = 0x18;
+ 187   2      
+ 188   2              count++;
+ 189   2              
+ 190   2              if (count >= 1000) { // 1 second
+ 191   3                  count = 0;
+ 192   3                  if (time_led > 0) {
+ 193   4                      time_led--;
+ 194   4                  } else {
+ 195   4                      time_led = 21;
+ 196   4                      led_on = !led_on;
+ 197   4                  }
+ 198   3              }
+ 199   2          }
+ 200   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    609    ----
+   CONSTANT SIZE    =     16    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     12       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      3       1
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,13 @@
+led D1: bấm nút s1 hoặc nút 1 trên remote để bật tắt
+led D2: tự động theo quang trở, sáng tắt, tối bật
+led D3: nút k2 tăng thời gian, nút k3 giảm thời gian, nút k1 bắt đầu đếm ngược hoặc dừng
+ + thời gian hiển thị( tối đa 15s):
+	f -> 15s
+	e -> 14s
+	d -> 13s
+	c -> 12s
+	b -> 11s
+	a -> 10s
+	9 -> 9s
+	...
+	0 -> 0s
